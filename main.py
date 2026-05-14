@@ -25,17 +25,26 @@ response = requests.get(url).json()
 
 articles = response["articles"]
 
+filtered = []
+
+for a in articles:
+    if not a.get("title") or not a.get("description"):
+        continue
+
+    if len(a["title"]) < 40:
+        continue
+
+    filtered.append(a)
+
+articles = filtered[:10]
+
 news_text = ""
 
 for article in articles:
     title = article.get("title", "")
     description = article.get("description", "")
 
-    news_text += f"""
-Title: {title}
-Description: {description}
-
-"""
+    news_text += f"TITLE: {title}\nDESC: {description}\n\n"
 
 # =========================
 # GEMINI
@@ -73,15 +82,11 @@ summary = response.text
 # TELEGRAM
 # =========================
 
-print("TELEGRAM_TOKEN:", TELEGRAM_TOKEN)
-print("CHAT_ID:", CHAT_ID)
-print("SUMMARY LENGTH:", len(summary))
-
 bot = Bot(token=TELEGRAM_TOKEN)
 
-result = bot.send_message(
+bot.send_message(
     chat_id=CHAT_ID,
     text=summary
 )
 
-print(result)
+print("Done!")
