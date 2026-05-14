@@ -73,11 +73,15 @@ summary = response.text
 # TELEGRAM
 # =========================
 
+print("TELEGRAM_TOKEN:", TELEGRAM_TOKEN)
+print("CHAT_ID:", CHAT_ID)
+print("SUMMARY LENGTH:", len(summary))
+
 bot = Bot(token=TELEGRAM_TOKEN)
 
-bot.send_message(
+result = bot.send_message(
     chat_id=CHAT_ID,
     text=summary
 )
 
-print("Done!")
+print(result)
