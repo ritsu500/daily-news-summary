@@ -44,7 +44,7 @@ for article in articles:
     title = article.get("title", "")
     description = article.get("description", "")
 
-    news_text += f"TITLE: {title}\nDESC: {description}\n\n"
+    news_text += f"\nTITLE: {title}\nDESC: {description}\nIMPORTANCE: rate 1-10\n"
 
 # =========================
 # GEMINI
@@ -54,25 +54,39 @@ genai.configure(api_key=GEMINI_API_KEY)
 
 model = genai.GenerativeModel("gemini-2.5-flash")
 
+
 prompt = f"""
-Ты — ИИ, который делает ежедневную выжимку новостей.
+Ты — профессиональный новостной аналитик уровня Bloomberg terminal.
 
-Сделай:
-- кратко;
-- понятно;
-- структурированно;
-- на русском языке;
-- максимум 10 пунктов.
+Твоя задача:
+- анализировать новости как рынок-аналитик
+- отбирать только значимые события
+- оценивать влияние на экономику, науку, политику технологии и рынки
+- игнорировать шум и неважные новости
 
-Добавь:
-1. Главные мировые события
-2. Технологии / AI
-3. Экономику если есть важные новости
+ОБЯЗАТЕЛЬНО:
+- максимум 6–8 пунктов всего
+- только важные события
+- каждый пункт = 1–2 предложения
+- без воды
 
-Вот новости:
+ФОРМАТ:
 
+🔥 TOP BRIEF (самые важные события дня)
+
+🌍 WORLD, Politics (новости в мире, политика)
+
+🤖 TECH / AI
+
+📊 MARKET IMPACT (влияние на экономику/рынки)
+
+⚠️ WATCH LIST (риски / что следить)
+
+
+НОВОСТИ:
 {news_text}
 """
+
 
 response = model.generate_content(prompt)
 
